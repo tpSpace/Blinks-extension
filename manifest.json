@@ -10,6 +10,11 @@
     "https://www.twitch.tv/*",
     "https://www.reddit.com/*",
     "https://www.youtube.com/*",
-    "https://github.com/*"
-  ]
+    "https://github.com/*",
+    "https://www.google.com/"
+  ],
+  "background": {
+    "service_worker": "src/background.ts"
+  },
+  "permissions": ["scripting"]
 }
