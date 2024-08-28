@@ -25,6 +25,12 @@ function replaceSpanWithButton(targetDiv: HTMLElement) {
     buttonElement.style.borderRadius = "5px";
     buttonElement.style.cursor = "pointer";
 
+    // Add event listener to the button for click events
+    buttonElement.addEventListener("click", () => {
+      // Send a message to the background script when the button is clicked
+      chrome.runtime.sendMessage({ type: "donateButtonClicked" });
+    });
+
     // Replace the span with the new button
     targetDiv.replaceChild(buttonElement, spanElement);
   } else {
