@@ -16,5 +16,11 @@
   "background": {
     "service_worker": "src/background.ts"
   },
-  "permissions": ["scripting"]
+  "permissions": ["scripting", "activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.google.com/*"],
+      "js": ["src/content.ts"]
+    }
+  ]
 }
