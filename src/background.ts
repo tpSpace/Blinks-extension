@@ -4,7 +4,7 @@ chrome.scripting
       id: "session-script",
       js: ["src/content.ts"],
       persistAcrossSessions: false,
-      matches: ["https://www.google.com/"],
+      matches: ["https://x.com/*"],
       runAt: "document_start",
     },
   ])

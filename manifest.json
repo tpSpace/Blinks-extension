@@ -19,7 +19,7 @@
   "permissions": ["scripting", "activeTab"],
   "content_scripts": [
     {
-      "matches": ["https://*.google.com/*"],
+      "matches": ["https://x.com/*"],
       "js": ["src/content.ts"]
     }
   ]
