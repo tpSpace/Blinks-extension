@@ -6,12 +6,16 @@ function replaceSpanWithButton(targetDiv: HTMLElement) {
   // Select the span inside the target div
   const spanElement = targetDiv.querySelector(
     "span.css-1jxf684.r-bcqeeo.r-1ttztb7.r-qvutc0.r-poiln3"
-  );
+  ) as HTMLSpanElement;
 
   if (spanElement) {
+    // Save the innerText of the span to localStorage with the key 'blink'
+    localStorage.setItem("blink", spanElement.innerText);
+
     // Create a new button element
     const buttonElement = document.createElement("button");
     buttonElement.textContent = "Donate me"; // Set the button's content
+    buttonElement.id = "donateButton"; // Set the button's id
 
     // Optionally, add some styling to the button
     buttonElement.style.padding = "5px 10px";
