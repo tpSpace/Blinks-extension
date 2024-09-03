@@ -18,17 +18,17 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "donateButtonClicked") {
     // Perform the desired action when the button is clicked
     console.log("Donate button was clicked!");
-    fetch("http://localhost:3000/api/actions/donateMe", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-        // Handle the response from the API if needed
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    try {
+      console.log(window.solana!.isPhantom);
+      if (window.solana!.isPhantom) {
+        console.log("Phantom wallet installed");
+        // Connect to the Phantom wallet
+      } else {
+        console.error("Phantom wallet not installed");
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   }
 
   // Respond if necessary
