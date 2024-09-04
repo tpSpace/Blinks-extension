@@ -8,7 +8,11 @@ interface SolanaProvider {
 
 declare global {
   interface Window {
-    solana?: SolanaProvider;
+    phantom?: {
+      solana?: {
+        isPhantom?: boolean;
+      };
+    };
   }
 }
 

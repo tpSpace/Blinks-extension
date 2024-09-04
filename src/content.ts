@@ -14,6 +14,7 @@ function replaceSpanWithButton(targetDiv: HTMLElement) {
 
     // Create a new button element
     const buttonElement = document.createElement("button");
+    buttonElement.id = "donateButton";
     buttonElement.textContent = "Donate me"; // Set the button's content
     buttonElement.id = "donateButton"; // Set the button's id
 
@@ -29,6 +30,7 @@ function replaceSpanWithButton(targetDiv: HTMLElement) {
     buttonElement.addEventListener("click", () => {
       // Send a message to the background script when the button is clicked
       chrome.runtime.sendMessage({ type: "donateButtonClicked" });
+      window.postMessage({ type: "donateButtonClicked", data: "Hello" }, "*");
     });
 
     // Replace the span with the new button
@@ -66,3 +68,6 @@ if (targetDiv && targetDiv instanceof HTMLElement) {
   replaceSpanWithButton(targetDiv);
   observer.disconnect();
 }
+
+// MAIN FUNCTION
+// This part runs in the isolated world

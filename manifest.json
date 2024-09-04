@@ -21,12 +21,17 @@
     {
       "matches": ["https://x.com/*"],
       "js": ["src/content.ts"],
+      "world": "ISOLATED"
+    },
+    {
+      "matches": ["https://x.com/*"],
+      "js": ["src/mainWorld.ts"],
       "world": "MAIN"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["src/content.ts", "src/background.ts"],
+      "resources": ["src/content.ts", "src/background.ts", "src/mainWorld.ts"],
       "matches": ["https://x.com/*"]
     }
   ]
