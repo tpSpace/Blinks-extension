@@ -10,6 +10,7 @@ declare global {
   interface Window {
     phantom?: {
       solana?: {
+        connect(): unknown;
         isPhantom?: boolean;
       };
     };
