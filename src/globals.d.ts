@@ -10,8 +10,9 @@ declare global {
   interface Window {
     phantom?: {
       solana?: {
-        connect(): unknown;
         isPhantom?: boolean;
+        connect(): Promise<{ publicKey: string }>;
+        publicKey: string;
       };
     };
   }
