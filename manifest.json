@@ -2,5 +2,37 @@
   "manifest_version": 3,
   "name": "Multi-Blinks",
   "version": "1.0.0",
-  "action": { "default_popup": "index.html" }
+  "action": { "default_popup": "index.html" },
+  "host_permissions": [
+    "https://twitter.com/*",
+    "https://x.com/*",
+    "https://www.facebook.com/*",
+    "https://www.twitch.tv/*",
+    "https://www.reddit.com/*",
+    "https://www.youtube.com/*",
+    "https://github.com/*",
+    "https://www.google.com/"
+  ],
+  "background": {
+    "service_worker": "src/background.ts"
+  },
+  "permissions": ["scripting", "activeTab", "tabs"],
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*"],
+      "js": ["src/content.ts"],
+      "world": "ISOLATED"
+    },
+    {
+      "matches": ["https://x.com/*"],
+      "js": ["src/mainWorld.ts"],
+      "world": "MAIN"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["src/content.ts", "src/background.ts", "src/mainWorld.ts"],
+      "matches": ["https://x.com/*"]
+    }
+  ]
 }
