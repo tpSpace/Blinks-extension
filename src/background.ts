@@ -20,6 +20,24 @@ chrome.runtime.onMessage.addListener((message) => {
     // Perform the desired action when the button is clicked
     console.log("Donate button was clicked!");
   }
+
+  if (message.type === "messageFromMainWorld") {
+    // make a post request to the api with the public key
+    postDonate(message.publicKey);
+    console.log("message from main world", message);
+    // send a message to main
+  }
 });
+
+async function postDonate(publicKey: string) {
+  const response = await fetch("http://localhost:3000/api/donate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ publicKey }),
+  });
+  return response;
+}
 
 console.log("background script loaded");

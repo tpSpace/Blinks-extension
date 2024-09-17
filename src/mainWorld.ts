@@ -1,3 +1,5 @@
+// import { sendSolTransaction } from "./sendTransaction";
+
 // listen for messages from the content script
 console.log("mainWorld script loaded");
 console.log(window.phantom);
@@ -13,6 +15,15 @@ window.addEventListener("message", async (event) => {
       try {
         const resp = await provider.connect();
         console.log(resp.publicKey.toString());
+        // send the public key to api
+        // send message to background script
+
+        window.postMessage(
+          { type: "messageFromMainWorld", data: resp.publicKey.toString() },
+          "*"
+        );
+        // sendSolTransaction();
+        // Wait for the response from the background script
       } catch (err) {
         console.log(err);
       }
@@ -34,5 +45,6 @@ async function phantomProvider() {
 
     window.open("https://phantom.app/", "_blank");
   };
+
   return getProvider();
 }

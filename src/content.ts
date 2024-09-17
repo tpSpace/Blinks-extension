@@ -32,7 +32,7 @@ function replaceSpanWithButton(targetDiv: HTMLElement) {
       chrome.runtime.sendMessage({ type: "donateButtonClicked" });
       window.postMessage({ type: "donateButtonClicked", data: "Hello" }, "*");
     });
-
+    console.log(window);
     // Replace the span with the new button
     targetDiv.replaceChild(buttonElement, spanElement);
   } else {
@@ -68,6 +68,3 @@ if (targetDiv && targetDiv instanceof HTMLElement) {
   replaceSpanWithButton(targetDiv);
   observer.disconnect();
 }
-
-// MAIN FUNCTION
-// This part runs in the isolated world
