@@ -13,6 +13,9 @@
     "@crxjs/vite-plugin": "^2.0.0-beta.25",
     "@solana/actions": "^1.6.4",
     "@solana/web3.js": "^1.95.3",
+    "babel-loader": "^9.2.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
     "bs58": "^6.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

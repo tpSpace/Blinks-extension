@@ -1,15 +1,18 @@
 interface SolanaProvider {
   isPhantom: boolean;
-  connect: () => Promise<{ publicKey: { toString: () => string } }>;
+  publicKey: PublicKey;
+  connect: () => Promise<{ publicKey: PublicKey }>;
   disconnect: () => Promise<void>;
-  signTransaction: (transaction: { message: string }) => Promise<string>;
-  send: (method: string, params: any) => Promise<any>;
+  signAndSendTransaction: (
+    transaction: Transaction
+  ) => Promise<{ signature: string }>;
 }
 
 declare global {
   interface Window {
     phantom?: {
       solana?: {
+        [x: string]: any;
         isPhantom?: boolean;
         connect(): Promise<{ publicKey: string }>;
         publicKey: string;

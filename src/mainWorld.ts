@@ -1,5 +1,5 @@
 // import { sendSolTransaction } from "./sendTransaction";
-
+import {} from "@solana/web3.js";
 // listen for messages from the content script
 console.log("mainWorld script loaded");
 console.log(window.phantom);
@@ -22,7 +22,9 @@ window.addEventListener("message", async (event) => {
           { type: "messageFromMainWorld", data: resp.publicKey.toString() },
           "*"
         );
-        // sendSolTransaction();
+        // ========================
+
+        //=====================
         // Wait for the response from the background script
       } catch (err) {
         console.log(err);

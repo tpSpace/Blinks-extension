@@ -5,7 +5,7 @@ chrome.scripting
       js: ["src/content.ts", "src/mainWorld.ts", "src/background.ts"],
       persistAcrossSessions: false,
       matches: ["https://x.com/*"],
-      runAt: "document_start",
+      runAt: "document_end",
       world: "MAIN",
     },
   ])
@@ -15,29 +15,17 @@ chrome.scripting
 // chromelisten a button with an id of donateButton
 
 // Listener for messages from content scripts
-chrome.runtime.onMessage.addListener((message) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log("on message", message, sender, sendResponse);
+
+  if (!sender.tab || !sender.tab.id) {
+    return null;
+  }
   if (message.type === "donateButtonClicked") {
     // Perform the desired action when the button is clicked
     console.log("Donate button was clicked!");
-  }
-
-  if (message.type === "messageFromMainWorld") {
-    // make a post request to the api with the public key
-    postDonate(message.publicKey);
-    console.log("message from main world", message);
-    // send a message to main
+    handleWalletCommunication();
   }
 });
 
-async function postDonate(publicKey: string) {
-  const response = await fetch("http://localhost:3000/api/donate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ publicKey }),
-  });
-  return response;
-}
-
-console.log("background script loaded");
+async function handleWalletCommunication() {}
