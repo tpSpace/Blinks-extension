@@ -45,6 +45,36 @@ function handleTwitter(targetDiv: HTMLElement) {
     buttonElement.style.borderRadius = "5px";
     buttonElement.style.cursor = "pointer";
 
+    // Thinner gradient border with Twitter color scheme
+    buttonElement.style.border = "1px solid transparent";
+    buttonElement.style.backgroundImage =
+      "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #1da1f2, #ffffff)";
+    buttonElement.style.backgroundOrigin = "border-box";
+    buttonElement.style.backgroundClip = "padding-box, border-box";
+
+    // Glowing effect with a subtle Twitter blue shadow
+    buttonElement.style.boxShadow =
+      "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+
+    // Add animation for smooth transitions
+    buttonElement.style.transition =
+      "box-shadow 0.4s ease, background-image 0.8s ease";
+
+    // Glow and gradient border change on hover
+    buttonElement.addEventListener("mouseenter", () => {
+      buttonElement.style.boxShadow =
+        "0 0 15px rgba(29, 161, 242, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
+      // buttonElement.style.backgroundImage =
+      //   "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #ffffff, #1da1f2)";
+    });
+
+    buttonElement.addEventListener("mouseleave", () => {
+      buttonElement.style.boxShadow =
+        "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+      // buttonElement.style.backgroundImage =
+      //   "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #1da1f2, #ffffff)";
+    });
+
     buttonElement.addEventListener("click", () => {
       chrome.runtime.sendMessage({ type: "donateButtonClicked" });
       window.postMessage({ type: "donateButtonClicked", data: "Hello" }, "*");
