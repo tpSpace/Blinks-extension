@@ -14,7 +14,8 @@
     "https://www.google.com/"
   ],
   "background": {
-    "service_worker": "src/background.ts"
+    "service_worker": "src/background.ts",
+    "type": "module"
   },
   "permissions": ["scripting", "activeTab", "tabs"],
   "content_scripts": [
