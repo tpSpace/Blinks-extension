@@ -13,7 +13,7 @@ chrome.scripting
       id: "session-script",
       js: ["src/content.ts", "src/mainWorld.ts", "src/background.ts"],
       persistAcrossSessions: false,
-      matches: ["https://x.com/*"],
+      matches: ["https://x.com/*", "https://www.youtube.com/*"],
       runAt: "document_idle",
       world: "MAIN",
     },

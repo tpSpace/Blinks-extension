@@ -20,12 +20,12 @@
   "permissions": ["scripting", "activeTab", "tabs"],
   "content_scripts": [
     {
-      "matches": ["https://x.com/*"],
+      "matches": ["https://x.com/*", "https://www.youtube.com/*"],
       "js": ["src/content.ts"],
       "world": "ISOLATED"
     },
     {
-      "matches": ["https://x.com/*"],
+      "matches": ["https://x.com/*", "https://www.youtube.com/*"],
       "js": ["src/mainWorld.ts"],
       "world": "MAIN"
     }
@@ -33,7 +33,7 @@
   "web_accessible_resources": [
     {
       "resources": ["src/content.ts", "src/background.ts", "src/mainWorld.ts"],
-      "matches": ["https://x.com/*"]
+      "matches": ["https://x.com/*", "https://www.youtube.com/*"]
     }
   ]
 }
