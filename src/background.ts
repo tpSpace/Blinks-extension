@@ -14,7 +14,7 @@ chrome.scripting
       js: ["src/content.ts", "src/mainWorld.ts", "src/background.ts"],
       persistAcrossSessions: false,
       matches: ["https://x.com/*"],
-      runAt: "document_end",
+      runAt: "document_idle",
       world: "MAIN",
     },
   ])
