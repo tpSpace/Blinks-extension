@@ -21,13 +21,17 @@
   "content_scripts": [
     {
       "matches": ["https://x.com/*", "https://www.youtube.com/*"],
-      "js": ["src/content.ts"],
+      "js": ["src/content.ts", "src/transaction.ts"],
       "world": "ISOLATED"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["src/content.ts", "src/background.ts"],
+      "resources": [
+        "src/content.ts",
+        "src/background.ts",
+        "src/transaction.ts"
+      ],
       "matches": ["https://x.com/*", "https://www.youtube.com/*"]
     }
   ]
