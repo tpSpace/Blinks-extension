@@ -90,8 +90,11 @@ function handleTwitter(targetDiv: HTMLElement) {
     });
 
     buttonElement.addEventListener("click", () => {
-      chrome.runtime.sendMessage({ type: "donateButtonClicked" });
-      window.postMessage({ type: "donateButtonClicked", data: "Hello" }, "*");
+      chrome.runtime.sendMessage({
+        type: "donateButtonClicked",
+        message: link,
+      });
+      // window.postMessage({ type: "donateButtonClicked", data: link }, "*");
     });
 
     targetDiv.replaceChild(buttonElement, spanElement);
@@ -205,8 +208,10 @@ function handleYouTube(targetDiv: HTMLElement) {
 
     // Handle button click
     buttonElement.addEventListener("click", () => {
-      chrome.runtime.sendMessage({ type: "donateButtonClicked" });
-      window.postMessage({ type: "donateButtonClicked", data: "Hello" }, "*");
+      chrome.runtime.sendMessage({
+        type: "donateButtonClicked",
+        message: link,
+      });
     });
 
     // Add the button to the parent element
