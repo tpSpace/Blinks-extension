@@ -3,6 +3,7 @@
   "name": "Multi-Blinks",
   "version": "1.0.0",
   "action": { "default_popup": "index.html" },
+  "description": "A browser extension that blinks multiple elements on a page",
   "host_permissions": [
     "https://twitter.com/*",
     "https://x.com/*",
@@ -17,7 +18,7 @@
     "service_worker": "src/background.ts",
     "type": "module"
   },
-  "permissions": ["scripting", "activeTab", "tabs"],
+  "permissions": ["scripting", "activeTab", "tabs", "storage"],
   "content_scripts": [
     {
       "matches": ["https://x.com/*", "https://www.youtube.com/*"],

@@ -16,7 +16,7 @@ chrome.scripting
 // chromelisten a button with an id of donateButton
 
 // Listener for messages from content scripts
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   console.log("on message", message, sender, sendResponse);
   if (!sender.tab || !sender.tab.id) {
     return null;
@@ -24,23 +24,30 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "donateButtonClicked") {
     console.log("Donate button was clicked!");
 
-    chrome.scripting.executeScript({
-      world: "MAIN",
-      target: { tabId: sender.tab.id },
-      func: (link) => {
-        // Define the function directly in the injected code
-        async function handleWalletCommunication(link: string) {
-          chrome.runtime.sendMessage({
-            type: "transaction",
-            message: link,
-          });
-          console.log(link);
+    // fetch api from message.message
+    await fetch(message.message)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok " + response.statusText);
         }
-
-        // Call the function within the injected script
-        handleWalletCommunication(link);
-      },
-      args: [message.message],
-    });
+        return response.json(); // or response.text() if you expect plain text
+      })
+      .then((data) => {
+        console.log("Data received:", data);
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if (tabs[0].id) {
+            chrome.tabs.sendMessage(tabs[0].id, {
+              type: "transaction",
+              message: data,
+            });
+          }
+        });
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
   }
 });
