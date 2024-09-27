@@ -16,8 +16,22 @@ function getPlatformByOrigin(): string | null {
     return "instagram";
   } else if (origin.includes("tiktok.com")) {
     return "tiktok";
+  } else if (origin.includes("youtube.com")) {
+    return "youtube";
   }
   return null; // Return null if not a recognized platform
+}
+
+// extract blinks
+function extractLinkAfterMultiBlanks(content: string): string | null {
+  // Regular expression to find "multi-blinks" followed by a URL, including both http and https
+  const regex = /multi-blinks:\s*(https?:\/\/localhost:\d+\/[^\s]*)/i;
+
+  // Execute the regex on the HTML content
+  const match = regex.exec(content);
+
+  // If a match is found, return the URL; otherwise, return null
+  return match ? match[1] : null;
 }
 
 // Function to handle Twitter
@@ -32,7 +46,11 @@ function handleTwitter(targetDiv: HTMLElement) {
   ) as HTMLSpanElement;
 
   if (spanElement) {
-    localStorage.setItem("blink", spanElement.innerText);
+    const link = extractLinkAfterMultiBlanks(spanElement.innerText);
+    if (!link) {
+      return;
+    }
+    localStorage.setItem("blink", link);
 
     const buttonElement = document.createElement("button");
     buttonElement.id = "donateButton";
@@ -42,7 +60,7 @@ function handleTwitter(targetDiv: HTMLElement) {
     buttonElement.style.backgroundColor = "#1da1f2"; // Twitter blue
     buttonElement.style.color = "#fff";
     buttonElement.style.border = "none";
-    buttonElement.style.borderRadius = "5px";
+    buttonElement.style.borderRadius = "20px";
     buttonElement.style.cursor = "pointer";
 
     // Thinner gradient border with Twitter color scheme
@@ -64,20 +82,19 @@ function handleTwitter(targetDiv: HTMLElement) {
     buttonElement.addEventListener("mouseenter", () => {
       buttonElement.style.boxShadow =
         "0 0 15px rgba(29, 161, 242, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
-      // buttonElement.style.backgroundImage =
-      //   "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #ffffff, #1da1f2)";
     });
 
     buttonElement.addEventListener("mouseleave", () => {
       buttonElement.style.boxShadow =
         "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
-      // buttonElement.style.backgroundImage =
-      //   "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #1da1f2, #ffffff)";
     });
 
     buttonElement.addEventListener("click", () => {
-      chrome.runtime.sendMessage({ type: "donateButtonClicked" });
-      window.postMessage({ type: "donateButtonClicked", data: "Hello" }, "*");
+      chrome.runtime.sendMessage({
+        type: "donateButtonClicked",
+        message: link,
+      });
+      // window.postMessage({ type: "donateButtonClicked", data: link }, "*");
     });
 
     targetDiv.replaceChild(buttonElement, spanElement);
@@ -131,6 +148,79 @@ function handleTikTok(targetDiv: HTMLElement) {
   // 4. Replace the identified element with the new button
 }
 
+// Pseudo code for handling YouTube
+function handleYouTube(targetDiv: HTMLElement) {
+  const parentElement = targetDiv;
+  // get link from description
+  const data = document.querySelector<HTMLElement>(
+    "#description-inline-expander yt-attributed-string span.yt-core-attributed-string--link-inherit-color"
+  );
+  if (!data) {
+    return;
+  }
+  const link = extractLinkAfterMultiBlanks(data.innerText);
+  if (!link) {
+    return;
+  }
+  localStorage.setItem("blink", link);
+
+  if (parentElement) {
+    // Create the donate button with rounded Material UI style
+    const buttonElement = document.createElement("button");
+    buttonElement.id = "donateButton";
+    buttonElement.textContent = "Donate me";
+
+    // General styles for round button
+    buttonElement.style.padding = "10px";
+    buttonElement.style.backgroundColor = "#1da1f2"; // Twitter blue
+    buttonElement.style.color = "#fff";
+    // buttonElement.style.border = "none";
+    buttonElement.style.borderRadius = "20px"; // Make it round
+    buttonElement.style.cursor = "pointer";
+    buttonElement.style.width = "100px"; // Width for round shape
+    buttonElement.style.height = "39px"; // Height for round shape
+    buttonElement.style.marginLeft = "15px";
+    // Thinner gradient border with Twitter color scheme
+    buttonElement.style.border = "1px solid transparent";
+    buttonElement.style.backgroundImage =
+      "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #1da1f2, #ffffff)";
+    buttonElement.style.backgroundOrigin = "border-box";
+    buttonElement.style.backgroundClip = "padding-box, border-box";
+
+    // Glowing effect with a subtle Twitter blue shadow
+    buttonElement.style.boxShadow =
+      "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+
+    // Add animation for smooth transitions
+    buttonElement.style.transition =
+      "box-shadow 0.4s ease, background-image 0.8s ease";
+
+    // Glow and gradient border change on hover
+    buttonElement.addEventListener("mouseenter", () => {
+      buttonElement.style.boxShadow =
+        "0 0 15px rgba(29, 161, 242, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
+    });
+
+    buttonElement.addEventListener("mouseleave", () => {
+      buttonElement.style.boxShadow =
+        "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+    });
+
+    // Handle button click
+    buttonElement.addEventListener("click", () => {
+      chrome.runtime.sendMessage({
+        type: "donateButtonClicked",
+        message: link,
+      });
+    });
+
+    // Add the button to the parent element
+    parentElement.appendChild(buttonElement);
+  } else {
+    console.log("Parent element not found");
+  }
+}
+
 // Main logic
 const platform = getPlatformByOrigin();
 console.log(platform);
@@ -148,6 +238,8 @@ if (platform) {
       ? "/* Instagram-specific target selector */"
       : platform === "tiktok"
       ? "/* TikTok-specific target selector */"
+      : platform === "youtube"
+      ? "#top-row > #owner"
       : null;
 
   if (targetSelector) {
@@ -174,6 +266,9 @@ if (platform) {
                 break;
               case "tiktok":
                 handleTikTok(targetDiv);
+                break;
+              case "youtube":
+                handleYouTube(targetDiv);
                 break;
             }
             observer.disconnect();
@@ -205,6 +300,9 @@ if (platform) {
           break;
         case "tiktok":
           handleTikTok(targetDiv);
+          break;
+        case "youtube":
+          handleYouTube(targetDiv);
           break;
       }
       observer.disconnect();
