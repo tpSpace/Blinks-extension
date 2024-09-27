@@ -3,7 +3,7 @@ chrome.scripting
   .registerContentScripts([
     {
       id: "session-script",
-      js: ["src/content.ts", "src/background.ts", "src/transaction.ts"],
+      js: ["src/background.ts", "src/transaction.ts"],
       persistAcrossSessions: false,
       matches: ["https://x.com/*", "https://www.youtube.com/*"],
       runAt: "document_idle",
@@ -14,7 +14,6 @@ chrome.scripting
   .catch((err) => console.warn("unexpected error", err));
 
 // chromelisten a button with an id of donateButton
-
 // Listener for messages from content scripts
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   console.log("on message", message, sender, sendResponse);

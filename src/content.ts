@@ -313,3 +313,25 @@ if (platform) {
 } else {
   console.error("Platform not recognized");
 }
+
+chrome.runtime.onMessage.addListener((message) => {
+  console.log("Sending message to transaction");
+
+  if (message.type === "transaction") {
+    window.postMessage({ type: "transaction", message: message.message }, "*");
+  }
+});
+
+function injectScript(file_path: string) {
+  console.log("injecting script");
+  const script = document.createElement("script");
+  script.setAttribute("type", "text/javascript");
+  script.setAttribute("src", file_path);
+  document.body.appendChild(script);
+  (document.head || document.documentElement).appendChild(script);
+  script.onload = function () {
+    script.remove(); // Clean up after the script is loaded.
+  };
+}
+
+injectScript(chrome.runtime.getURL("transaction.ts"));

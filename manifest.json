@@ -22,8 +22,13 @@
   "content_scripts": [
     {
       "matches": ["https://x.com/*", "https://www.youtube.com/*"],
-      "js": ["src/content.ts", "src/transaction.ts"],
+      "js": ["src/content.ts"],
       "world": "ISOLATED"
+    },
+    {
+      "matches": ["https://x.com/*", "https://www.youtube.com/*"],
+      "js": ["src/transaction.ts"],
+      "world": "MAIN"
     }
   ],
   "web_accessible_resources": [
@@ -35,5 +40,8 @@
       ],
       "matches": ["https://x.com/*", "https://www.youtube.com/*"]
     }
-  ]
+  ],
+  "externally_connectable": {
+    "matches": ["https://x.com/*", "https://www.youtube.com/*"]
+  }
 }
