@@ -7,6 +7,7 @@ window.addEventListener("message", async (event) => {
         console.log("Provider not found");
         return;
       }
+      // @ts-expect-error Phantom is a global variable injected by solana provider
       console.log(window.phantom.solana);
     } catch (err) {
       console.error("Error:", err);
@@ -16,7 +17,8 @@ window.addEventListener("message", async (event) => {
 
 const getProvider = () => {
   if ("phantom" in window) {
-    const provider = window.phantom?.solana;
+    // @ts-expect-error Phantom is a global variable injected by solana provider
+    const provider = window.phantom.solana;
     console.log("Provider found:", provider);
     if (provider?.isPhantom) {
       return provider;
