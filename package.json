@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "displayName": "Multi-Blinks",
+  "description": "A Solana browser extension that blinks multiple elements on a page",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -17,8 +19,10 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-register": "^6.26.0",
     "bs58": "^6.0.0",
+    "buffer": "^6.0.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "vite-plugin-node-polyfills": "^0.22.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
