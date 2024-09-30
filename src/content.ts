@@ -1,12 +1,12 @@
+import {
+  clusterApiUrl,
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from "@solana/web3.js";
+
 console.log("Hello from content.ts");
-function uint8ArrayToBase64(bytes: Uint8Array): string {
-  let binary = "";
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return window.btoa(binary);
-}
 
 // Function to determine the social media platform based on origin
 function getPlatformByOrigin(): string | null {
@@ -332,16 +332,6 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 });
 
-import {
-  clusterApiUrl,
-  Connection,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from "@solana/web3.js";
-
-console.log("Hello from content.ts");
-
 // Initialize a connection to the Solana cluster
 const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
 
@@ -408,7 +398,7 @@ async function createAndSendTransaction(publicKey: PublicKey) {
     });
 
     // Use the helper function to encode the transaction data in base64
-    const txDataBase64 = uint8ArrayToBase64(serializedTransaction);
+    const txDataBase64 = serializedTransaction.toString("base64");
 
     // Send message to background script to sign the transaction
     chrome.runtime.sendMessage(

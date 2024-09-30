@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "displayName": "Multi-Blinks",
+  "description": "A Solana browser extension that blinks multiple elements on a page",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

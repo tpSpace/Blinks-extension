@@ -55,7 +55,7 @@ async function handleWalletCommunication(
           ? async () => {
               // @ts-expect-error solflare is not defined
               const provider = window.solflare;
-              const res = await provider.connect();
+              await provider.connect();
               return provider.publicKey.toString();
             }
           : async () => {
@@ -92,6 +92,9 @@ async function handleWalletCommunication(
       target: { tabId: tabId },
       func: async (transaction: string, wallet) => {
         try {
+          // @ts-expect-error solana is not defined
+          const provider = window.solana;
+          await provider.connect();
           const res =
             wallet === "solflare"
               ? // @ts-expect-error solflare is not defined
@@ -110,9 +113,9 @@ async function handleWalletCommunication(
                 });
           console.log("result", res);
           return res;
-        } catch (e: any) {
+        } catch (e: unknown) {
           console.log("error", e);
-          return { error: e.message ?? "Unknown error---?" };
+          return { error: e ?? "Unknown error---?" };
         }
       },
       // @ts-expect-error solflare is not defined
