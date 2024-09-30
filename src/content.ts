@@ -1,4 +1,12 @@
 console.log("Hello from content.ts");
+function uint8ArrayToBase64(bytes: Uint8Array): string {
+  let binary = "";
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return window.btoa(binary);
+}
 
 // Function to determine the social media platform based on origin
 function getPlatformByOrigin(): string | null {
@@ -94,6 +102,7 @@ function handleTwitter(targetDiv: HTMLElement) {
         type: "donateButtonClicked",
         message: link,
       });
+      handleDonateButtonClick(link);
       // window.postMessage({ type: "donateButtonClicked", data: link }, "*");
     });
 
@@ -212,6 +221,7 @@ function handleYouTube(targetDiv: HTMLElement) {
         type: "donateButtonClicked",
         message: link,
       });
+      handleDonateButtonClick(link);
     });
 
     // Add the button to the parent element
@@ -322,16 +332,114 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 });
 
-function injectScript(file_path: string) {
-  console.log("injecting script");
-  const script = document.createElement("script");
-  script.setAttribute("type", "text/javascript");
-  script.setAttribute("src", file_path);
-  document.body.appendChild(script);
-  (document.head || document.documentElement).appendChild(script);
-  script.onload = function () {
-    script.remove(); // Clean up after the script is loaded.
-  };
+import {
+  clusterApiUrl,
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from "@solana/web3.js";
+
+console.log("Hello from content.ts");
+
+// Initialize a connection to the Solana cluster
+const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+
+// Function to handle the donate button click
+function handleDonateButtonClick(link: string) {
+  console.log("Donate button clicked with link:", link);
+  // First, connect to the wallet
+  chrome.runtime.sendMessage(
+    {
+      type: "connect",
+      wallet: "phantom", // Specify the wallet you're using ('phantom' or 'solflare')
+    },
+    (response) => {
+      if (chrome.runtime.lastError) {
+        console.error(
+          "Error connecting to wallet:",
+          chrome.runtime.lastError.message
+        );
+        return;
+      }
+      if (response && response.error) {
+        console.error("Error connecting to wallet:", response.error);
+      } else if (response) {
+        const publicKey = new PublicKey(response);
+        console.log("Connected with public key:", publicKey.toString());
+
+        // Now, create the transaction instruction
+        createAndSendTransaction(publicKey);
+      } else {
+        console.error("No response from connect");
+      }
+    }
+  );
 }
 
-injectScript(chrome.runtime.getURL("transaction.ts"));
+async function createAndSendTransaction(publicKey: PublicKey) {
+  try {
+    // Define the recipient's public key (replace with actual recipient)
+    const recipientPublicKey = new PublicKey(
+      "8szuR5N9F2BRAcFGEUrd64G6AoPB5fUwMdDsE4cD2k2Y"
+    );
+
+    // Define the amount to send in lamports (e.g., 0.001 SOL = 1,000,000 lamports)
+    const lamports = 10 ** 9;
+
+    // Create a transfer instruction
+    const transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: recipientPublicKey,
+        lamports,
+      })
+    );
+
+    // Get a recent blockhash and set the fee payer
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = publicKey;
+
+    // Serialize the transaction without signing
+    const serializedTransaction = transaction.serialize({
+      requireAllSignatures: false,
+      verifySignatures: false,
+    });
+
+    // Use the helper function to encode the transaction data in base64
+    const txDataBase64 = uint8ArrayToBase64(serializedTransaction);
+
+    // Send message to background script to sign the transaction
+    chrome.runtime.sendMessage(
+      {
+        type: "sign_transaction",
+        wallet: "phantom", // Ensure this matches the wallet you're using
+        payload: {
+          txData: txDataBase64,
+        },
+      },
+      (signResponse) => {
+        if (chrome.runtime.lastError) {
+          console.error(
+            "Error signing transaction:",
+            chrome.runtime.lastError.message
+          );
+          return;
+        }
+        if (signResponse && signResponse.error) {
+          console.error("Error signing transaction:", signResponse.error);
+        } else if (signResponse) {
+          console.log(
+            "Transaction signed and sent, signature:",
+            signResponse.signature
+          );
+        } else {
+          console.error("No response from sign_transaction");
+        }
+      }
+    );
+  } catch (error) {
+    console.error("Error creating or sending transaction:", error);
+  }
+}

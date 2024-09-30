@@ -17,8 +17,10 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-register": "^6.26.0",
     "bs58": "^6.0.0",
+    "buffer": "^6.0.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "vite-plugin-node-polyfills": "^0.22.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
