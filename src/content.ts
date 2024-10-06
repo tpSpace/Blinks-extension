@@ -62,7 +62,7 @@ function handleTwitter(targetDiv: HTMLElement) {
 
     const buttonElement = document.createElement("button");
     buttonElement.id = "donateButton";
-    buttonElement.textContent = "Donate me";
+    buttonElement.textContent = "Donate";
 
     buttonElement.style.padding = "5px 10px";
     buttonElement.style.backgroundColor = "#1da1f2"; // Twitter blue
@@ -133,10 +133,85 @@ function handleLinkedIn(targetDiv: HTMLElement) {
 // Pseudo code for handling Reddit
 function handleReddit(targetDiv: HTMLElement) {
   console.log(targetDiv);
+  console.log("Reddit");
   // 1. Identify the element to replace
   // 2. Create the button with custom styling for Reddit
   // 3. Add event listeners
   // 4. Replace the identified element with the new button
+  const parentElement = targetDiv;
+  // get link from post content
+  const data = document.querySelector<HTMLElement>(
+    // paragraph with data-testid="profile-description"
+    "#right-sidebar-container > aside > div.p-md > p"
+  );
+  if (!data) {
+    console.log("Data not found");
+    return;
+  }
+  console.log(data.innerText);
+  const link = extractLinkAfterMultiBlanks(data.innerText);
+  if (!link) {
+    return;
+  }
+  localStorage.setItem("blink", link);
+
+  if (parentElement) {
+    // Create the donate button with rounded Material UI style
+    const buttonElement = document.createElement("button");
+    buttonElement.id = "donateButton";
+    buttonElement.textContent = "Donate";
+
+    // General styles for round button
+    buttonElement.style.padding = "10px";
+    // Reddit red color
+    buttonElement.style.backgroundColor = "#ff4500";
+    buttonElement.style.color = "#fff";
+    // buttonElement.style.border = "none";
+    buttonElement.style.borderRadius = "20px"; // Make it round
+    buttonElement.style.cursor = "pointer";
+    buttonElement.style.width = "100px"; // Width for round shape
+    buttonElement.style.height = "39px"; // Height for round shape
+    buttonElement.style.marginLeft = "15px";
+    // Thinner gradient border with Twitter color scheme
+    buttonElement.style.border = "1px solid transparent";
+    buttonElement.style.backgroundImage =
+      "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #1da1f2, #ffffff)";
+    buttonElement.style.backgroundOrigin = "border-box";
+    buttonElement.style.backgroundClip = "padding-box, border-box";
+
+    // Glowing effect with a subtle Twitter blue shadow
+    buttonElement.style.boxShadow =
+      "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+
+    // Add animation for smooth transitions
+    buttonElement.style.transition =
+      "box-shadow 0.4s ease, background-image 0.8s ease";
+
+    // Glow and gradient border change on hover
+    buttonElement.addEventListener("mouseenter", () => {
+      buttonElement.style.boxShadow =
+        "0 0 15px rgba(29, 161, 242, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
+    });
+
+    buttonElement.addEventListener("mouseleave", () => {
+      buttonElement.style.boxShadow =
+        "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+    });
+
+    // Handle button click
+    buttonElement.addEventListener("click", () => {
+      chrome.runtime.sendMessage({
+        type: "donateButtonClicked",
+        message: link,
+      });
+      handleDonateButtonClick(link);
+    });
+
+    // Replace the share button with the donate button
+    parentElement.appendChild(buttonElement);
+  } else {
+    console.log("Parent element not found");
+  }
 }
 
 // Pseudo code for handling Instagram
@@ -177,7 +252,7 @@ function handleYouTube(targetDiv: HTMLElement) {
     // Create the donate button with rounded Material UI style
     const buttonElement = document.createElement("button");
     buttonElement.id = "donateButton";
-    buttonElement.textContent = "Donate me";
+    buttonElement.textContent = "Donate";
 
     // General styles for round button
     buttonElement.style.padding = "10px";
@@ -243,7 +318,7 @@ if (platform) {
       : platform === "linkedin"
       ? "/* LinkedIn-specific target selector */"
       : platform === "reddit"
-      ? "/* Reddit-specific target selector */"
+      ? "#right-sidebar-container > aside > div.p-md > div.mt-sm > div"
       : platform === "instagram"
       ? "/* Instagram-specific target selector */"
       : platform === "tiktok"
