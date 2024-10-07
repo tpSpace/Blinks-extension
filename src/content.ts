@@ -123,12 +123,85 @@ function handleFacebook(targetDiv: HTMLElement) {
 }
 
 // Pseudo code for handling LinkedIn
-function handleLinkedIn(targetDiv: HTMLElement) {
+function handleTwitch(targetDiv: HTMLElement) {
   console.log(targetDiv);
   // 1. Identify the element to replace
-  // 2. Create the button with custom styling for LinkedIn
+  // 2. Create the button with custom styling for Twitch
   // 3. Add event listeners
   // 4. Replace the identified element with the new button
+  const parentElement = targetDiv;
+  const data = document.querySelector<HTMLElement>(
+    "#offline-channel-main-content > div.Layout-sc-1xcs6mc-0.cRYXMq > div > div > div > div:nth-child(1) > div.Layout-sc-1xcs6mc-0.ceSMVf > div > div > div.Layout-sc-1xcs6mc-0.jlCrCH.about-section__panel--content > div > div > p"
+  );
+
+  if (!data) {
+    return;
+  }
+
+  const link = extractLinkAfterMultiBlanks(data.innerText);
+  if (!link) {
+    return;
+  }
+
+  localStorage.setItem("blink", link);
+
+  if (parentElement) {
+    // Create the donate button with rounded Material UI style
+    const buttonElement = document.createElement("button");
+    buttonElement.id = "donateButton";
+    buttonElement.textContent = "Donate";
+
+    // General styles for round button
+    buttonElement.style.padding = "10px";
+    // Twitch purple color
+    buttonElement.style.backgroundColor = "#6441a5";
+    buttonElement.style.color = "#fff";
+    // buttonElement.style.border = "none";
+    buttonElement.style.borderRadius = "20px"; // Make it round
+    buttonElement.style.cursor = "pointer";
+    buttonElement.style.width = "100px"; // Width for round shape
+    buttonElement.style.height = "39px"; // Height for round shape
+    buttonElement.style.marginLeft = "15px";
+    // Thinner gradient border with Twitch color scheme
+    buttonElement.style.border = "1px solid transparent";
+    buttonElement.style.backgroundImage =
+      "linear-gradient(#6441a5, #6441a5), linear-gradient(45deg, #6441a5, #ffffff)";
+    buttonElement.style.backgroundOrigin = "border-box";
+    buttonElement.style.backgroundClip = "padding-box, border-box";
+
+    // Glowing effect with a subtle Twitch purple shadow
+    buttonElement.style.boxShadow =
+      "0 0 10px rgba(100, 65, 165, 0.6), 0 0 20px rgba(100, 65, 165, 0.6)";
+
+    // Add animation for smooth transitions
+    buttonElement.style.transition =
+      "box-shadow 0.4s ease, background-image 0.8s ease";
+
+    // Glow and gradient border change on hover
+    buttonElement.addEventListener("mouseenter", () => {
+      buttonElement.style.boxShadow =
+        "0 0 15px rgba(100, 65, 165, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
+    });
+
+    buttonElement.addEventListener("mouseleave", () => {
+      buttonElement.style.boxShadow =
+        "0 0 10px rgba(100, 65, 165, 0.6), 0 0 20px rgba(100, 65, 165, 0.6)";
+    });
+
+    // Handle button click
+    buttonElement.addEventListener("click", () => {
+      chrome.runtime.sendMessage({
+        type: "donateButtonClicked",
+        message: link,
+      });
+      handleDonateButtonClick(link);
+    });
+
+    // Replace the share button with the donate button
+    parentElement.appendChild(buttonElement);
+  } else {
+    console.log("Parent element not found");
+  }
 }
 
 // Pseudo code for handling Reddit
@@ -163,26 +236,26 @@ function handleReddit(targetDiv: HTMLElement) {
     buttonElement.textContent = "Donate";
 
     // General styles for round button
-    buttonElement.style.padding = "10px";
-    // Reddit red color
+    // buttonElement.style.padding = "10px";
+    // Reddit orange color
     buttonElement.style.backgroundColor = "#ff4500";
     buttonElement.style.color = "#fff";
     // buttonElement.style.border = "none";
     buttonElement.style.borderRadius = "20px"; // Make it round
     buttonElement.style.cursor = "pointer";
-    buttonElement.style.width = "100px"; // Width for round shape
-    buttonElement.style.height = "39px"; // Height for round shape
+    buttonElement.style.width = "74px"; // Width for round shape
+    buttonElement.style.height = "32px"; // Height for round shape
     buttonElement.style.marginLeft = "15px";
-    // Thinner gradient border with Twitter color scheme
+    // Thinner gradient border with Reddit color scheme
     buttonElement.style.border = "1px solid transparent";
     buttonElement.style.backgroundImage =
-      "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #1da1f2, #ffffff)";
+      "linear-gradient(#ff4500, #ff4500), linear-gradient(45deg, #ff4500, #ffffff)";
     buttonElement.style.backgroundOrigin = "border-box";
     buttonElement.style.backgroundClip = "padding-box, border-box";
 
-    // Glowing effect with a subtle Twitter blue shadow
+    // Glowing effect with a subtle Reddit orange shadow
     buttonElement.style.boxShadow =
-      "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+      "0 0 10px rgba(255, 69, 0, 0.6), 0 0 20px rgba(255, 69, 0, 0.6)";
 
     // Add animation for smooth transitions
     buttonElement.style.transition =
@@ -191,7 +264,7 @@ function handleReddit(targetDiv: HTMLElement) {
     // Glow and gradient border change on hover
     buttonElement.addEventListener("mouseenter", () => {
       buttonElement.style.boxShadow =
-        "0 0 15px rgba(29, 161, 242, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
+        "0 0 15px rgba(255, 69, 0, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
     });
 
     buttonElement.addEventListener("mouseleave", () => {
@@ -318,8 +391,8 @@ if (platform) {
       ? 'div[style="text-overflow: unset; color: rgb(231, 233, 234);"].css-146c3p1.r-bcqeeo.r-1ttztb7.r-qvutc0.r-37j5jr.r-a023e6.r-rjixqe.r-16dba41[data-testid="UserDescription"]'
       : platform === "facebook"
       ? "/* Facebook-specific target selector */"
-      : platform === "linkedin"
-      ? "/* LinkedIn-specific target selector */"
+      : platform === "twitch"
+      ? "#offline-channel-main-content > div.Layout-sc-1xcs6mc-0.dehlJN.home-header-sticky > div.Layout-sc-1xcs6mc-0.dGvaUO > div.Layout-sc-1xcs6mc-0.jskmre > div.Layout-sc-1xcs6mc-0.hdoiLi > a > div"
       : platform === "reddit"
       ? "#right-sidebar-container > aside > div.p-md > div.mt-sm > div"
       : platform === "instagram"
@@ -343,8 +416,8 @@ if (platform) {
               case "facebook":
                 handleFacebook(targetDiv);
                 break;
-              case "linkedin":
-                handleLinkedIn(targetDiv);
+              case "twitch":
+                handleTwitch(targetDiv);
                 break;
               case "reddit":
                 handleReddit(targetDiv);
@@ -377,8 +450,8 @@ if (platform) {
         case "facebook":
           handleFacebook(targetDiv);
           break;
-        case "linkedin":
-          handleLinkedIn(targetDiv);
+        case "twitch":
+          handleTwitch(targetDiv);
           break;
         case "reddit":
           handleReddit(targetDiv);

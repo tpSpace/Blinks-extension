@@ -34,6 +34,7 @@ export default defineManifest({
         "https://x.com/*",
         "https://www.youtube.com/*",
         "https://www.reddit.com/*",
+        "https://www.twitch.tv/*",
       ],
       js: ["src/content.ts"],
     },
@@ -45,6 +46,7 @@ export default defineManifest({
         "https://x.com/*",
         "https://www.youtube.com/*",
         "https://www.reddit.com/*",
+        "https://www.twitch.tv/*",
       ],
     },
   ],
@@ -53,6 +55,7 @@ export default defineManifest({
       "https://x.com/*",
       "https://www.youtube.com/*",
       "https://www.reddit.com/*",
+      "https://www.twitch.tv/*",
     ],
   },
 });
