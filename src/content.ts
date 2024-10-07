@@ -254,10 +254,12 @@ function handleYouTube(targetDiv: HTMLElement) {
     const buttonElement = document.createElement("button");
     buttonElement.id = "donateButton";
     buttonElement.textContent = "Donate";
+    buttonElement.style.fontWeight = "bold";
 
     // General styles for round button
     buttonElement.style.padding = "10px";
-    buttonElement.style.backgroundColor = "#1da1f2"; // Twitter blue
+    // YouTube red color
+    buttonElement.style.backgroundColor = "#ff0000";
     buttonElement.style.color = "#fff";
     // buttonElement.style.border = "none";
     buttonElement.style.borderRadius = "20px"; // Make it round
@@ -265,10 +267,10 @@ function handleYouTube(targetDiv: HTMLElement) {
     buttonElement.style.width = "100px"; // Width for round shape
     buttonElement.style.height = "39px"; // Height for round shape
     buttonElement.style.marginLeft = "15px";
-    // Thinner gradient border with Twitter color scheme
+    // Thinner gradient border with YouTube color scheme
     buttonElement.style.border = "1px solid transparent";
     buttonElement.style.backgroundImage =
-      "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #1da1f2, #ffffff)";
+      "linear-gradient(#ff0000, #ff0000), linear-gradient(45deg, #ff0000, #ffffff)";
     buttonElement.style.backgroundOrigin = "border-box";
     buttonElement.style.backgroundClip = "padding-box, border-box";
 
@@ -409,7 +411,7 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 // Initialize a connection to the Solana cluster
-const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
 // Function to handle the donate button click
 function handleDonateButtonClick(link: string) {
