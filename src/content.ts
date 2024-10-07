@@ -19,6 +19,7 @@ function getPlatformByOrigin(): string | null {
   } else if (origin.includes("linkedin.com")) {
     return "linkedin";
   } else if (origin.includes("reddit.com")) {
+    console.log("Reddit");
     return "reddit";
   } else if (origin.includes("instagram.com")) {
     return "instagram";
