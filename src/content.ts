@@ -333,7 +333,7 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 // Initialize a connection to the Solana cluster
-const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
 // Function to handle the donate button click
 function handleDonateButtonClick(link: string) {
