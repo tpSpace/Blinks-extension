@@ -19,6 +19,7 @@ function getPlatformByOrigin(): string | null {
   } else if (origin.includes("linkedin.com")) {
     return "linkedin";
   } else if (origin.includes("reddit.com")) {
+    console.log("Reddit");
     return "reddit";
   } else if (origin.includes("instagram.com")) {
     return "instagram";
@@ -62,7 +63,7 @@ function handleTwitter(targetDiv: HTMLElement) {
 
     const buttonElement = document.createElement("button");
     buttonElement.id = "donateButton";
-    buttonElement.textContent = "Donate me";
+    buttonElement.textContent = "Donate";
 
     buttonElement.style.padding = "5px 10px";
     buttonElement.style.backgroundColor = "#1da1f2"; // Twitter blue
@@ -122,21 +123,169 @@ function handleFacebook(targetDiv: HTMLElement) {
 }
 
 // Pseudo code for handling LinkedIn
-function handleLinkedIn(targetDiv: HTMLElement) {
+function handleTwitch(targetDiv: HTMLElement) {
   console.log(targetDiv);
   // 1. Identify the element to replace
-  // 2. Create the button with custom styling for LinkedIn
+  // 2. Create the button with custom styling for Twitch
   // 3. Add event listeners
   // 4. Replace the identified element with the new button
+  const parentElement = targetDiv;
+  const data = document.querySelector<HTMLElement>(
+    "#offline-channel-main-content > div.Layout-sc-1xcs6mc-0.cRYXMq > div > div > div > div:nth-child(1) > div.Layout-sc-1xcs6mc-0.ceSMVf > div > div > div.Layout-sc-1xcs6mc-0.jlCrCH.about-section__panel--content > div > div > p"
+  );
+
+  if (!data) {
+    return;
+  }
+
+  const link = extractLinkAfterMultiBlanks(data.innerText);
+  if (!link) {
+    return;
+  }
+
+  localStorage.setItem("blink", link);
+
+  if (parentElement) {
+    // Create the donate button with rounded Material UI style
+    const buttonElement = document.createElement("button");
+    buttonElement.id = "donateButton";
+    buttonElement.textContent = "Donate";
+
+    // General styles for round button
+    buttonElement.style.padding = "10px";
+    // Twitch purple color
+    buttonElement.style.backgroundColor = "#6441a5";
+    buttonElement.style.color = "#fff";
+    // buttonElement.style.border = "none";
+    buttonElement.style.borderRadius = "20px"; // Make it round
+    buttonElement.style.cursor = "pointer";
+    buttonElement.style.width = "100px"; // Width for round shape
+    buttonElement.style.height = "39px"; // Height for round shape
+    buttonElement.style.marginLeft = "15px";
+    // Thinner gradient border with Twitch color scheme
+    buttonElement.style.border = "1px solid transparent";
+    buttonElement.style.backgroundImage =
+      "linear-gradient(#6441a5, #6441a5), linear-gradient(45deg, #6441a5, #ffffff)";
+    buttonElement.style.backgroundOrigin = "border-box";
+    buttonElement.style.backgroundClip = "padding-box, border-box";
+
+    // Glowing effect with a subtle Twitch purple shadow
+    buttonElement.style.boxShadow =
+      "0 0 10px rgba(100, 65, 165, 0.6), 0 0 20px rgba(100, 65, 165, 0.6)";
+
+    // Add animation for smooth transitions
+    buttonElement.style.transition =
+      "box-shadow 0.4s ease, background-image 0.8s ease";
+
+    // Glow and gradient border change on hover
+    buttonElement.addEventListener("mouseenter", () => {
+      buttonElement.style.boxShadow =
+        "0 0 15px rgba(100, 65, 165, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
+    });
+
+    buttonElement.addEventListener("mouseleave", () => {
+      buttonElement.style.boxShadow =
+        "0 0 10px rgba(100, 65, 165, 0.6), 0 0 20px rgba(100, 65, 165, 0.6)";
+    });
+
+    // Handle button click
+    buttonElement.addEventListener("click", () => {
+      chrome.runtime.sendMessage({
+        type: "donateButtonClicked",
+        message: link,
+      });
+      handleDonateButtonClick(link);
+    });
+
+    // Replace the share button with the donate button
+    parentElement.appendChild(buttonElement);
+  } else {
+    console.log("Parent element not found");
+  }
 }
 
 // Pseudo code for handling Reddit
 function handleReddit(targetDiv: HTMLElement) {
   console.log(targetDiv);
+  console.log("Reddit");
   // 1. Identify the element to replace
   // 2. Create the button with custom styling for Reddit
   // 3. Add event listeners
   // 4. Replace the identified element with the new button
+  const parentElement = targetDiv;
+  // get link from post content
+  const data = document.querySelector<HTMLElement>(
+    // paragraph with data-testid="profile-description"
+    "#right-sidebar-container > aside > div.p-md > p"
+  );
+  if (!data) {
+    console.log("Data not found");
+    return;
+  }
+  console.log(data.innerText);
+  const link = extractLinkAfterMultiBlanks(data.innerText);
+  if (!link) {
+    return;
+  }
+  localStorage.setItem("blink", link);
+
+  if (parentElement) {
+    // Create the donate button with rounded Material UI style
+    const buttonElement = document.createElement("button");
+    buttonElement.id = "donateButton";
+    buttonElement.textContent = "Donate";
+
+    // General styles for round button
+    // buttonElement.style.padding = "10px";
+    // Reddit orange color
+    buttonElement.style.backgroundColor = "#ff4500";
+    buttonElement.style.color = "#fff";
+    // buttonElement.style.border = "none";
+    buttonElement.style.borderRadius = "20px"; // Make it round
+    buttonElement.style.cursor = "pointer";
+    buttonElement.style.width = "74px"; // Width for round shape
+    buttonElement.style.height = "32px"; // Height for round shape
+    buttonElement.style.marginLeft = "15px";
+    // Thinner gradient border with Reddit color scheme
+    buttonElement.style.border = "1px solid transparent";
+    buttonElement.style.backgroundImage =
+      "linear-gradient(#ff4500, #ff4500), linear-gradient(45deg, #ff4500, #ffffff)";
+    buttonElement.style.backgroundOrigin = "border-box";
+    buttonElement.style.backgroundClip = "padding-box, border-box";
+
+    // Glowing effect with a subtle Reddit orange shadow
+    buttonElement.style.boxShadow =
+      "0 0 10px rgba(255, 69, 0, 0.6), 0 0 20px rgba(255, 69, 0, 0.6)";
+
+    // Add animation for smooth transitions
+    buttonElement.style.transition =
+      "box-shadow 0.4s ease, background-image 0.8s ease";
+
+    // Glow and gradient border change on hover
+    buttonElement.addEventListener("mouseenter", () => {
+      buttonElement.style.boxShadow =
+        "0 0 15px rgba(255, 69, 0, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
+    });
+
+    buttonElement.addEventListener("mouseleave", () => {
+      buttonElement.style.boxShadow =
+        "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+    });
+
+    // Handle button click
+    buttonElement.addEventListener("click", () => {
+      chrome.runtime.sendMessage({
+        type: "donateButtonClicked",
+        message: link,
+      });
+      handleDonateButtonClick(link);
+    });
+
+    // Replace the share button with the donate button
+    parentElement.appendChild(buttonElement);
+  } else {
+    console.log("Parent element not found");
+  }
 }
 
 // Pseudo code for handling Instagram
@@ -177,11 +326,13 @@ function handleYouTube(targetDiv: HTMLElement) {
     // Create the donate button with rounded Material UI style
     const buttonElement = document.createElement("button");
     buttonElement.id = "donateButton";
-    buttonElement.textContent = "Donate me";
+    buttonElement.textContent = "Donate";
+    buttonElement.style.fontWeight = "bold";
 
     // General styles for round button
     buttonElement.style.padding = "10px";
-    buttonElement.style.backgroundColor = "#1da1f2"; // Twitter blue
+    // YouTube red color
+    buttonElement.style.backgroundColor = "#ff0000";
     buttonElement.style.color = "#fff";
     // buttonElement.style.border = "none";
     buttonElement.style.borderRadius = "20px"; // Make it round
@@ -189,10 +340,10 @@ function handleYouTube(targetDiv: HTMLElement) {
     buttonElement.style.width = "100px"; // Width for round shape
     buttonElement.style.height = "39px"; // Height for round shape
     buttonElement.style.marginLeft = "15px";
-    // Thinner gradient border with Twitter color scheme
+    // Thinner gradient border with YouTube color scheme
     buttonElement.style.border = "1px solid transparent";
     buttonElement.style.backgroundImage =
-      "linear-gradient(#1da1f2, #1da1f2), linear-gradient(45deg, #1da1f2, #ffffff)";
+      "linear-gradient(#ff0000, #ff0000), linear-gradient(45deg, #ff0000, #ffffff)";
     buttonElement.style.backgroundOrigin = "border-box";
     buttonElement.style.backgroundClip = "padding-box, border-box";
 
@@ -240,10 +391,10 @@ if (platform) {
       ? 'div[style="text-overflow: unset; color: rgb(231, 233, 234);"].css-146c3p1.r-bcqeeo.r-1ttztb7.r-qvutc0.r-37j5jr.r-a023e6.r-rjixqe.r-16dba41[data-testid="UserDescription"]'
       : platform === "facebook"
       ? "/* Facebook-specific target selector */"
-      : platform === "linkedin"
-      ? "/* LinkedIn-specific target selector */"
+      : platform === "twitch"
+      ? "#offline-channel-main-content > div.Layout-sc-1xcs6mc-0.dehlJN.home-header-sticky > div.Layout-sc-1xcs6mc-0.dGvaUO > div.Layout-sc-1xcs6mc-0.jskmre > div.Layout-sc-1xcs6mc-0.hdoiLi > a > div"
       : platform === "reddit"
-      ? "/* Reddit-specific target selector */"
+      ? "#right-sidebar-container > aside > div.p-md > div.mt-sm > div"
       : platform === "instagram"
       ? "/* Instagram-specific target selector */"
       : platform === "tiktok"
@@ -265,8 +416,8 @@ if (platform) {
               case "facebook":
                 handleFacebook(targetDiv);
                 break;
-              case "linkedin":
-                handleLinkedIn(targetDiv);
+              case "twitch":
+                handleTwitch(targetDiv);
                 break;
               case "reddit":
                 handleReddit(targetDiv);
@@ -299,8 +450,8 @@ if (platform) {
         case "facebook":
           handleFacebook(targetDiv);
           break;
-        case "linkedin":
-          handleLinkedIn(targetDiv);
+        case "twitch":
+          handleTwitch(targetDiv);
           break;
         case "reddit":
           handleReddit(targetDiv);

@@ -30,17 +30,32 @@ export default defineManifest({
   permissions: ["scripting", "activeTab", "tabs", "storage"],
   content_scripts: [
     {
-      matches: ["https://x.com/*", "https://www.youtube.com/*"],
+      matches: [
+        "https://x.com/*",
+        "https://www.youtube.com/*",
+        "https://www.reddit.com/*",
+        "https://www.twitch.tv/*",
+      ],
       js: ["src/content.ts"],
     },
   ],
   web_accessible_resources: [
     {
       resources: ["src/content.ts", "src/background.ts"],
-      matches: ["https://x.com/*", "https://www.youtube.com/*"],
+      matches: [
+        "https://x.com/*",
+        "https://www.youtube.com/*",
+        "https://www.reddit.com/*",
+        "https://www.twitch.tv/*",
+      ],
     },
   ],
   externally_connectable: {
-    matches: ["https://x.com/*", "https://www.youtube.com/*"],
+    matches: [
+      "https://x.com/*",
+      "https://www.youtube.com/*",
+      "https://www.reddit.com/*",
+      "https://www.twitch.tv/*",
+    ],
   },
 });
