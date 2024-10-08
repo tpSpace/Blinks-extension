@@ -21,12 +21,12 @@
   "permissions": ["scripting", "activeTab", "tabs", "storage"],
   "content_scripts": [
     {
-      "matches": ["https://x.com/*", "https://www.youtube.com/*"],
+      "matches": ["https://x.com/*", "https://www.youtube.com/*", "https://www.twitch.tv/*", "https://www.reddit.com/*"],
       "js": ["src/content.ts"],
       "world": "ISOLATED"
     },
     {
-      "matches": ["https://x.com/*", "https://www.youtube.com/*"],
+      "matches": ["https://x.com/*", "https://www.youtube.com/*", "https://www.twitch.tv/*", "https://www.reddit.com/*"],
       "js": ["src/transaction.ts"],
       "world": "MAIN"
     }
@@ -38,10 +38,10 @@
         "src/background.ts",
         "src/transaction.ts"
       ],
-      "matches": ["https://x.com/*", "https://www.youtube.com/*"]
+      "matches": ["https://x.com/*", "https://www.youtube.com/*", "https://www.twitch.tv/*", "https://www.reddit.com/*"]
     }
   ],
   "externally_connectable": {
-    "matches": ["https://x.com/*", "https://www.youtube.com/*"]
+    "matches": ["https://x.com/*", "https://www.youtube.com/*", "https://www.twitch.tv/*", "https://www.reddit.com/*"]
   }
 }
