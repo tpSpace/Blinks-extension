@@ -125,6 +125,7 @@ function handleFacebook(targetDiv: HTMLElement) {
 // Pseudo code for handling LinkedIn
 function handleTwitch(targetDiv: HTMLElement) {
   console.log(targetDiv);
+  console.log("Twitch");
   // 1. Identify the element to replace
   // 2. Create the button with custom styling for Twitch
   // 3. Add event listeners
@@ -135,6 +136,7 @@ function handleTwitch(targetDiv: HTMLElement) {
   );
 
   if (!data) {
+    console.log("Data not found");
     return;
   }
 
@@ -245,7 +247,7 @@ function handleReddit(targetDiv: HTMLElement) {
     buttonElement.style.cursor = "pointer";
     buttonElement.style.width = "74px"; // Width for round shape
     buttonElement.style.height = "32px"; // Height for round shape
-    buttonElement.style.marginLeft = "15px";
+    // buttonElement.style.marginLeft = "15px";
     // Thinner gradient border with Reddit color scheme
     buttonElement.style.border = "1px solid transparent";
     buttonElement.style.backgroundImage =
@@ -269,7 +271,7 @@ function handleReddit(targetDiv: HTMLElement) {
 
     buttonElement.addEventListener("mouseleave", () => {
       buttonElement.style.boxShadow =
-        "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+        "0 0 10px rgba(255, 69, 0, 0.6), 0 0 20px rgba(255, 69, 0, 0.6)";
     });
 
     // Handle button click
@@ -338,7 +340,7 @@ function handleYouTube(targetDiv: HTMLElement) {
     buttonElement.style.borderRadius = "20px"; // Make it round
     buttonElement.style.cursor = "pointer";
     buttonElement.style.width = "100px"; // Width for round shape
-    buttonElement.style.height = "39px"; // Height for round shape
+    buttonElement.style.height = "36px"; // Height for round shape
     buttonElement.style.marginLeft = "15px";
     // Thinner gradient border with YouTube color scheme
     buttonElement.style.border = "1px solid transparent";
@@ -347,9 +349,9 @@ function handleYouTube(targetDiv: HTMLElement) {
     buttonElement.style.backgroundOrigin = "border-box";
     buttonElement.style.backgroundClip = "padding-box, border-box";
 
-    // Glowing effect with a subtle Twitter blue shadow
+    // Glowing effect with a subtle YouTube red shadow
     buttonElement.style.boxShadow =
-      "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+      "0 0 10px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.6)";
 
     // Add animation for smooth transitions
     buttonElement.style.transition =
@@ -358,12 +360,12 @@ function handleYouTube(targetDiv: HTMLElement) {
     // Glow and gradient border change on hover
     buttonElement.addEventListener("mouseenter", () => {
       buttonElement.style.boxShadow =
-        "0 0 15px rgba(29, 161, 242, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
+        "0 0 15px rgba(255, 0, 0, 0.8), 0 0 25px rgba(255, 255, 255, 0.8)";
     });
 
     buttonElement.addEventListener("mouseleave", () => {
       buttonElement.style.boxShadow =
-        "0 0 10px rgba(29, 161, 242, 0.6), 0 0 20px rgba(29, 161, 242, 0.6)";
+        "0 0 10px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.6)";
     });
 
     // Handle button click
